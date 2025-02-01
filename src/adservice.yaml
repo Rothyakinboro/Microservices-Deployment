@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adservice
+  template:
+    metadata:
+      labels:
+        app: adservice
+    spec:
+      containers:
+      - name: service
+        image: gcr.io/google-samples/microservices-demo/adservice:sample-public-image-37b48b077af9130a6bd3b2fcb6d473e89eafc488262256f38fd663e890133af8
+        ports:
+        - containerPort: 9555
+        env:
+        - name: PORT
+          value: "9555"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adservice
+spec:
+  type: ClusterIP
+  selector:
+    app: adservice
+  ports:
+  - protocol: TCP
+    port: 9555
+    targetPort: 9555
